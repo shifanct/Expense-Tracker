@@ -1,0 +1,50 @@
+from django.shortcuts import render
+from django.shortcuts import redirect
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as auth_login, logout as auth_logout
+from django.contrib.auth.decorators import login_required
+
+# Create your views here.
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+
+def signup(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        if username and password:  
+            try:
+                user = User.objects.create_user(username=username, password=password)
+                login(request, user)
+                
+                return redirect('home')
+                
+            except:
+                return render(request, 'signup.html', {'error': 'Username already exists'})
+        
+        return render(request, 'signup.html', {'error': 'Please fill all fields'})
+    return render(request, 'signup.html')
+
+def login(request):
+    error_message = None
+    if request.method == 'POST':
+        username = request.POST.get('username')  # Safer than ['username']
+        password = request.POST.get('password')
+        
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            auth_login(request, user)
+            return redirect('home')
+        else:
+            error_message = 'Invalid username or password'
+    
+    return render(request, 'login.html', {'error_message': error_message})
+
+def logout(request):
+    auth_logout(request)
+    return redirect('login')
+
+def home(request):
+    return render(request, 'home.html')
