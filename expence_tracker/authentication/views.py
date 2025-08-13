@@ -20,10 +20,10 @@ def signup(request):
                 return redirect('home')
                 
             except:
-                return render(request, 'signup.html', {'error': 'Username already exists'})
+                return render(request, 'auth/signup.html', {'error': 'Username already exists'})
         
-        return render(request, 'signup.html', {'error': 'Please fill all fields'})
-    return render(request, 'signup.html')
+        return render(request, 'auth/signup.html', {'error': 'Please fill all fields'})
+    return render(request, 'auth/signup.html')
 
 def login_view(request):
     error_message = None
@@ -38,7 +38,7 @@ def login_view(request):
         else:
             error_message = 'Invalid username or password'
     
-    return render(request, 'login.html', {'error_message': error_message})
+    return render(request, 'auth/login.html', {'error_message': error_message})
 
 def logout(request):
     auth_logout(request)
