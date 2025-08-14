@@ -1,14 +1,16 @@
 from django import forms
-from . models import DailyExpense
+from . models import Income
 import datetime
 
 
-class DailyExpenseForm(forms.ModelForm):
+class IncomeForm(forms.ModelForm):
     class Meta:
-        model = DailyExpense
+        model = Income
         fields = '__all__'
-        exclude = ['user'] 
+        exclude = ['user']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date',
                                            'value': datetime.date.today().strftime('%Y-%m-%d')}),
         }
+        
+

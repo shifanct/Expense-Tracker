@@ -1,4 +1,6 @@
 <h3>Add Today Expenses</h3>
-<form>
+<form method="post">
+    {% csrf_token %}
     {{ form.as_p }}
+    <button type="submit">Save</button>
 </form>
