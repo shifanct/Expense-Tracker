@@ -1,0 +1,439 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    color: #ffffff;
+    min-height: 100vh;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+/* Container */
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* Page heading */
+h3 {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+    background: linear-gradient(45deg, #ffffff, #cccccc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    letter-spacing: -0.5px;
+    position: relative;
+}
+
+/* Add specific colors for different pages */
+.income-page h3 {
+    background: linear-gradient(45deg, #2ed573, #26d065);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.expense-page h3 {
+    background: linear-gradient(45deg, #ff4757, #ff3742);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Add decorative line under heading */
+h3::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(45deg, #ff4757, #2ed573);
+    border-radius: 2px;
+}
+
+.income-page h3::after {
+    background: linear-gradient(45deg, #2ed573, #26d065);
+}
+
+.expense-page h3::after {
+    background: linear-gradient(45deg, #ff4757, #ff3742);
+}
+
+/* Form styling */
+form {
+    background: linear-gradient(145deg, #2a2a2a, #1f1f1f);
+    border: 2px solid #404040;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+/* Add colored left border for different forms */
+.income-page form {
+    border-left: 6px solid #2ed573;
+}
+
+.expense-page form {
+    border-left: 6px solid #ff4757;
+}
+
+/* Form paragraphs (Django form fields) */
+form p {
+    margin-bottom: 25px;
+    position: relative;
+}
+
+/* Labels */
+form label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #cccccc;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Input fields */
+form input,
+form select,
+form textarea {
+    width: 100%;
+    padding: 15px 20px;
+    font-size: 1rem;
+    background: linear-gradient(145deg, #1a1a1a, #333333);
+    border: 2px solid #555555;
+    border-radius: 12px;
+    color: #ffffff;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+/* Input focus states */
+form input:focus,
+form select:focus,
+form textarea:focus {
+    outline: none;
+    border-color: #777777;
+    box-shadow: 
+        0 0 0 3px rgba(255, 255, 255, 0.1),
+        0 5px 15px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Income page input focus */
+.income-page form input:focus,
+.income-page form select:focus,
+.income-page form textarea:focus {
+    border-color: #2ed573;
+    box-shadow: 
+        0 0 0 3px rgba(46, 213, 115, 0.2),
+        0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Expense page input focus */
+.expense-page form input:focus,
+.expense-page form select:focus,
+.expense-page form textarea:focus {
+    border-color: #ff4757;
+    box-shadow: 
+        0 0 0 3px rgba(255, 71, 87, 0.2),
+        0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Textarea specific styling */
+form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Select dropdown styling */
+form select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'><path fill='%23ffffff' d='m0,1l2,2l2-2z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 12px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* Placeholder styling */
+form input::placeholder,
+form textarea::placeholder {
+    color: #888888;
+    opacity: 1;
+}
+
+/* Submit button */
+button[type="submit"],
+button[type="Submit"] {
+    width: 100%;
+    padding: 18px 25px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    background: linear-gradient(145deg, #333333, #1a1a1a);
+    border: 2px solid #555555;
+    border-radius: 15px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Submit button hover effect overlay */
+button[type="submit"]::before,
+button[type="Submit"]::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+button[type="submit"]:hover::before,
+button[type="Submit"]:hover::before {
+    left: 100%;
+}
+
+/* Income page submit button */
+.income-page button[type="submit"],
+.income-page button[type="Submit"] {
+    border-left: 4px solid #2ed573;
+}
+
+.income-page button[type="submit"]:hover,
+.income-page button[type="Submit"]:hover {
+    background: linear-gradient(145deg, #2ed573, #26d065);
+    border-color: #2ed573;
+    box-shadow: 0 8px 25px rgba(46, 213, 115, 0.3);
+    transform: translateY(-3px);
+}
+
+/* Expense page submit button */
+.expense-page button[type="submit"],
+.expense-page button[type="Submit"] {
+    border-left: 4px solid #ff4757;
+}
+
+.expense-page button[type="submit"]:hover,
+.expense-page button[type="Submit"]:hover {
+    background: linear-gradient(145deg, #ff4757, #ff3742);
+    border-color: #ff4757;
+    box-shadow: 0 8px 25px rgba(255, 71, 87, 0.3);
+    transform: translateY(-3px);
+}
+
+/* Back to dashboard link */
+.back-link {
+    display: inline-block;
+    margin-bottom: 30px;
+    padding: 12px 20px;
+    background: linear-gradient(145deg, #2a2a2a, #1f1f1f);
+    border: 2px solid #404040;
+    border-radius: 12px;
+    color: #cccccc;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.back-link::before {
+    content: '← ';
+    margin-right: 5px;
+}
+
+.back-link:hover {
+    color: #ffffff;
+    border-color: #666666;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Error messages */
+.errorlist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.errorlist li {
+    background: linear-gradient(145deg, #ff4757, #ff3742);
+    color: #ffffff;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3);
+}
+
+/* Success messages */
+.messages {
+    margin-bottom: 30px;
+}
+
+.messages .success {
+    background: linear-gradient(145deg, #2ed573, #26d065);
+    color: #ffffff;
+    padding: 15px 20px;
+    border-radius: 12px;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(46, 213, 115, 0.3);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .form-container {
+        padding: 20px 10px;
+    }
+    
+    h3 {
+        font-size: 2rem;
+        margin-bottom: 30px;
+    }
+    
+    form {
+        padding: 30px 25px;
+    }
+    
+    form input,
+    form select,
+    form textarea {
+        padding: 12px 16px;
+        font-size: 0.95rem;
+    }
+    
+    button[type="submit"],
+    button[type="Submit"] {
+        padding: 16px 20px;
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    h3 {
+        font-size: 1.8rem;
+    }
+    
+    form {
+        padding: 25px 20px;
+    }
+    
+    form input,
+    form select,
+    form textarea {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+    
+    button[type="submit"],
+    button[type="Submit"] {
+        padding: 15px 18px;
+        font-size: 1rem;
+    }
+    
+    .back-link {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Loading animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Form field animation */
+form p {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+form p:nth-child(2) { animation-delay: 0.1s; }
+form p:nth-child(3) { animation-delay: 0.2s; }
+form p:nth-child(4) { animation-delay: 0.3s; }
+form p:nth-child(5) { animation-delay: 0.4s; }
+
+button[type="submit"],
+button[type="Submit"] {
+    animation: fadeInUp 0.6s ease forwards;
+    animation-delay: 0.5s;
+}
+
+/* Floating label effect */
+.floating-label {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.floating-label input,
+.floating-label select,
+.floating-label textarea {
+    padding-top: 20px;
+}
+
+.floating-label label {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    background: transparent;
+    font-size: 1rem;
+    color: #888888;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.floating-label input:focus + label,
+.floating-label input:not(:placeholder-shown) + label,
+.floating-label select:focus + label,
+.floating-label textarea:focus + label,
+.floating-label textarea:not(:placeholder-shown) + label {
+    top: 5px;
+    font-size: 0.8rem;
+    color: #cccccc;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}

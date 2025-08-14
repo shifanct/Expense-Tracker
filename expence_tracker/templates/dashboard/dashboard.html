@@ -1,11 +1,58 @@
-<h1>Welcome to dashboard</h1>
-<h5>Total Expense this Month {{ month_expense }}</h5>
-<h5>Total Income this Month {{ month_income }}</h5>
-
-<h4><a href="{% url 'add_expense' %}">Add Expenses</a></h4>
-<h4><a href="{% url 'add_income' %}">Add Income</a></h4>
-
-<img src="data:image/png;base64,{{ bar_chart }}" alt="Expense Chart">
-
-
-<img src="data:image/png;base64,{{ pie_chart }}" alt="Pie chart">
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Welcome to Dashboard</h1>
+        
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <h2 class="section-header">Financial Overview</h2>
+            <div class="stats-container">
+                <div class="stat-card expense-card">
+                    <h5>Total Expense this Month</h5>
+                    <div class="stat-value">${{ month_expense|default:"0.00" }}</div>
+                </div>
+                
+                <div class="stat-card income-card">
+                    <h5>Total Income this Month</h5>
+                    <div class="stat-value">${{ month_income|default:"0.00" }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="actions-container">
+            <a href="{% url 'add_expense' %}" class="action-link add-expense">
+                Add Expenses
+            </a>
+            
+            <a href="{% url 'add_income' %}" class="action-link add-income">
+                Add Income
+            </a>
+        </div>
+        
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <h2 class="section-header">Analytics</h2>
+            <div class="charts-container">
+                <div class="chart-card bar-chart-card">
+                    <div class="chart-title">Expense Analysis</div>
+                    <img src="data:image/png;base64,{{ bar_chart }}" alt="Expense Chart">
+                </div>
+                
+                <div class="chart-card pie-chart-card">
+                    <div class="chart-title">Distribution Overview</div>
+                    <img src="data:image/png;base64,{{ pie_chart }}" alt="Pie Chart">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

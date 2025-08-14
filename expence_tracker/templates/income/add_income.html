@@ -1,7 +1,33 @@
-<h3>Add Expenses</h3>
-
-<form method="post">
-    {% csrf_token %}
-    {{ frm.as_p }}
-    <button type="Submit">Save</button>
-</form>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Income - Financial Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/forms.css' %}">
+</head>
+<body class="income-page">
+    <div class="form-container">
+        <!-- Back to Dashboard Link -->
+        <a href="{% url 'dashboard' %}" class="back-link">Back to Dashboard</a>
+        
+        <h3>Add Income</h3>
+        
+        <!-- Display Messages -->
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            {{ frm.as_p }}
+            <button type="submit">Save Income</button>
+        </form>
+    </div>
+</body>
+</html>
