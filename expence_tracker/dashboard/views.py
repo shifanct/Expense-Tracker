@@ -8,12 +8,6 @@ import io
 import base64
 from matplotlib import pyplot as plt
 
-# Create your views here.
-import matplotlib.pyplot as plt
-import io
-import base64
-from datetime import date
-from django.db.models import Sum
 
 @login_required(login_url='login')
 def home(request):
@@ -62,9 +56,29 @@ def home(request):
     graphic = base64.b64encode(buffer.getvalue()).decode()
     buffer.close()
 
+    this_month_income = Income.objects.filter(date__year=year, date__month=month).values('source').annotate(total=Sum('amount'))
+    income_source = []
+    income_amount = []
+    for income in this_month_income:
+        income_source.append(income['source'])
+        income_amount.append(income['total'])
+
+    plt.figure(figsize=(6, 6))
+    plt.pie(income_amount,labels=income_source,autopct='%1.1f%%',startangle=90)
+    plt.title(f"Income by Sourse on {today.strftime("%B")}")
+    buffer_pie = io.BytesIO()
+    plt.savefig(buffer_pie, format='png')
+    buffer_pie.seek(0)
+    pie_chart = base64.b64encode(buffer_pie.getvalue()).decode()
+    buffer_pie.close()
+
+
+
+
     context = {
         'month_expense': this_month_total_expense,
         'month_income': this_month_total_income,
-        'graph': graphic
+        'bar_chart': graphic,
+        'pie_chart':pie_chart,
     }
     return render(request, 'dashboard/dashboard.html', context)
