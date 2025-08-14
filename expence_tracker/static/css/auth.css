@@ -1,0 +1,432 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background decoration */
+body::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 70%, rgba(255, 71, 87, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 30%, rgba(46, 213, 115, 0.1) 0%, transparent 50%);
+    animation: float 20s ease-in-out infinite;
+    z-index: -1;
+}
+
+@keyframes float {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.1); }
+}
+
+/* Main container */
+.auth-container {
+    background: linear-gradient(145deg, #2a2a2a, #1f1f1f);
+    border: 2px solid #404040;
+    border-radius: 25px;
+    padding: 50px 40px;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    max-width: 450px;
+    width: 100%;
+    animation: slideIn 0.8s ease forwards;
+    backdrop-filter: blur(10px);
+}
+
+/* Container decoration */
+.auth-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #ff4757, #2ed573, #3742fa, #ffa502);
+    background-size: 400% 400%;
+    animation: gradientShift 8s ease infinite;
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Page-specific top borders */
+.signup-page .auth-container::before {
+    background: linear-gradient(90deg, #2ed573, #26d065);
+}
+
+.login-page .auth-container::before {
+    background: linear-gradient(90deg, #3742fa, #2f32e2);
+}
+
+/* Main heading */
+h1 {
+    text-align: center;
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+    background: linear-gradient(45deg, #ffffff, #cccccc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    letter-spacing: -1px;
+    position: relative;
+}
+
+/* Page-specific heading colors */
+.signup-page h1 {
+    background: linear-gradient(45deg, #2ed573, #26d065);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.login-page h1 {
+    background: linear-gradient(45deg, #3742fa, #2f32e2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Decorative line under heading */
+h1::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(45deg, #ff4757, #2ed573);
+    border-radius: 2px;
+}
+
+.signup-page h1::after {
+    background: linear-gradient(45deg, #2ed573, #26d065);
+}
+
+.login-page h1::after {
+    background: linear-gradient(45deg, #3742fa, #2f32e2);
+}
+
+/* Form styling */
+form {
+    margin-bottom: 30px;
+}
+
+/* Input fields */
+form input {
+    width: 100%;
+    padding: 18px 24px;
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    background: linear-gradient(145deg, #1a1a1a, #333333);
+    border: 2px solid #555555;
+    border-radius: 15px;
+    color: #ffffff;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    position: relative;
+}
+
+/* Input focus states */
+form input:focus {
+    outline: none;
+    border-color: #777777;
+    box-shadow: 
+        0 0 0 3px rgba(255, 255, 255, 0.1),
+        0 8px 25px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Page-specific input focus colors */
+.signup-page form input:focus {
+    border-color: #2ed573;
+    box-shadow: 
+        0 0 0 3px rgba(46, 213, 115, 0.2),
+        0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.login-page form input:focus {
+    border-color: #3742fa;
+    box-shadow: 
+        0 0 0 3px rgba(55, 66, 250, 0.2),
+        0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Placeholder styling */
+form input::placeholder {
+    color: #888888;
+    opacity: 1;
+    text-transform: capitalize;
+}
+
+/* Submit button */
+button[type="submit"] {
+    width: 100%;
+    padding: 18px 25px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    background: linear-gradient(145deg, #333333, #1a1a1a);
+    border: 2px solid #555555;
+    border-radius: 15px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 25px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Submit button hover effect overlay */
+button[type="submit"]::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+button[type="submit"]:hover::before {
+    left: 100%;
+}
+
+/* Page-specific submit button colors */
+.signup-page button[type="submit"] {
+    border-left: 4px solid #2ed573;
+}
+
+.signup-page button[type="submit"]:hover {
+    background: linear-gradient(145deg, #2ed573, #26d065);
+    border-color: #2ed573;
+    box-shadow: 0 10px 30px rgba(46, 213, 115, 0.3);
+    transform: translateY(-3px);
+}
+
+.login-page button[type="submit"] {
+    border-left: 4px solid #3742fa;
+}
+
+.login-page button[type="submit"]:hover {
+    background: linear-gradient(145deg, #3742fa, #2f32e2);
+    border-color: #3742fa;
+    box-shadow: 0 10px 30px rgba(55, 66, 250, 0.3);
+    transform: translateY(-3px);
+}
+
+/* Error messages */
+.error-message {
+    background: linear-gradient(145deg, #ff4757, #ff3742);
+    color: #ffffff;
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(255, 71, 87, 0.3);
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Link styling */
+h4 {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #cccccc;
+    line-height: 1.5;
+}
+
+h4 a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+/* Page-specific link colors */
+.signup-page h4 a {
+    color: #3742fa;
+}
+
+.signup-page h4 a:hover {
+    color: #2f32e2;
+    text-shadow: 0 0 10px rgba(55, 66, 250, 0.5);
+}
+
+.login-page h4 a {
+    color: #2ed573;
+}
+
+.login-page h4 a:hover {
+    color: #26d065;
+    text-shadow: 0 0 10px rgba(46, 213, 115, 0.5);
+}
+
+/* Link underline effect */
+h4 a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: currentColor;
+    transition: width 0.3s ease;
+}
+
+h4 a:hover::after {
+    width: 100%;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+    
+    .auth-container {
+        padding: 40px 30px;
+        border-radius: 20px;
+    }
+    
+    h1 {
+        font-size: 2.3rem;
+        margin-bottom: 35px;
+    }
+    
+    form input {
+        padding: 16px 20px;
+        font-size: 1rem;
+        margin-bottom: 18px;
+    }
+    
+    button[type="submit"] {
+        padding: 16px 20px;
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 35px 25px;
+        border-radius: 18px;
+    }
+    
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 30px;
+    }
+    
+    form input {
+        padding: 15px 18px;
+        font-size: 0.95rem;
+        margin-bottom: 16px;
+    }
+    
+    button[type="submit"] {
+        padding: 15px 18px;
+        font-size: 1rem;
+    }
+    
+    h4 {
+        font-size: 0.9rem;
+    }
+}
+
+/* Animation for container entrance */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Input field animation */
+form input {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+form input:nth-child(2) { animation-delay: 0.1s; }
+form input:nth-child(3) { animation-delay: 0.2s; }
+
+button[type="submit"] {
+    animation: fadeInUp 0.6s ease forwards;
+    animation-delay: 0.3s;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Success message */
+.success-message {
+    background: linear-gradient(145deg, #2ed573, #26d065);
+    color: #ffffff;
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(46, 213, 115, 0.3);
+    animation: slideIn 0.5s ease forwards;
+}
+
+/* Loading state for submit button */
+button[type="submit"]:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+button[type="submit"]:disabled:hover {
+    transform: none;
+    box-shadow: none;
+}

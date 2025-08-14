@@ -17,7 +17,7 @@ def signup(request):
             try:
                 user = User.objects.create_user(username=username, password=password)
                 login(request, user)
-                return redirect('home')
+                return redirect('dashboard')
                 
             except:
                 return render(request, 'auth/signup.html', {'error': 'Username already exists'})
@@ -34,7 +34,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user:
             auth_login(request, user)
-            return redirect('home')
+            return redirect('dashboard')
         else:
             error_message = 'Invalid username or password'
     
