@@ -1,84 +1,90 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from expense.models import DailyExpense
+from income.models import Income
 from datetime import date
 from django.db.models import Sum
-from income.models import Income
-import io
-import base64
-from matplotlib import pyplot as plt
+import io, base64
+import matplotlib.pyplot as plt
+
+
+def get_chart():
+    """Return base64 string of current Matplotlib figure."""
+    buffer = io.BytesIO()
+    plt.savefig(buffer, format='png', bbox_inches='tight')
+    buffer.seek(0)
+    chart = base64.b64encode(buffer.getvalue()).decode()
+    buffer.close()
+    return chart
 
 
 @login_required(login_url='login')
 def home(request):
     today = date.today()
-    year = today.year
-    month = today.month
+    year, month = today.year, today.month
 
-    this_month_total_expense = DailyExpense.objects.filter(
-        date__year=year, date__month=month
-    ).aggregate(total=Sum('amount'))['total'] or 0
+    # ====== Monthly Totals ======
+    month_expense = DailyExpense.objects.filter(date__year=year, date__month=month).aggregate(total=Sum('amount'))['total'] or 0
+    month_income = Income.objects.filter(date__year=year, date__month=month).aggregate(total=Sum('amount'))['total'] or 0
 
-    this_month_total_income = Income.objects.filter(
-        date__year=year, date__month=month
-    ).aggregate(total=Sum('amount'))['total'] or 0
+    # ====== Bar Chart: Expense by Category ======
+    expenses = DailyExpense.objects.filter(date__year=year, date__month=month) \
+                                   .values('expense_type') \
+                                   .annotate(total=Sum('amount'))
 
-    this_month_expense = DailyExpense.objects.filter(
-        date__year=year, date__month=month
-    )
-
-    expence_dict = {}
-    expense_type_list = []
-    expense_amount_list = []
-
-    for expense in this_month_expense:
-        if expense.expense_type in expence_dict:
-            expence_dict[expense.expense_type] += expense.amount
-        else:
-            expence_dict[expense.expense_type] = expense.amount
-
-    for key, value in expence_dict.items():
-        expense_type_list.append(key)
-        expense_amount_list.append(float(value))
-
-    plt.switch_backend('AGG')  
+    plt.switch_backend('AGG')
     plt.figure(figsize=(6, 4))
-    plt.bar(expense_type_list, expense_amount_list, color='skyblue')
+    plt.bar([e['expense_type'] for e in expenses], [float(e['total']) for e in expenses], color='skyblue')
     plt.title('Monthly Expense by Category')
     plt.xlabel('Category')
     plt.ylabel('Amount')
+    bar_chart = get_chart()
+
+    # ====== Pie Chart: Income by Source ======
+    incomes = Income.objects.filter(date__year=year, date__month=month) \
+                             .values('source') \
+                             .annotate(total=Sum('amount'))
+
+    plt.figure(figsize=(6, 4))
+    plt.pie([i['total'] for i in incomes], labels=[i['source'] for i in incomes],
+            autopct='%1.1f%%', startangle=90)
+    plt.title(f"Income by Source in {today.strftime('%B')}")
+    pie_chart = get_chart()
+
+    # ====== Line Chart: Income vs Expense (12 Months) ======
+    months_all = list(range(1, 13))
+    income_list = [0] * 12
+    expense_list = [0] * 12
+
+    income_data = Income.objects.filter(date__year=year) \
+                                .values('date__month') \
+                                .annotate(total=Sum('amount'))
+
+    expense_data = DailyExpense.objects.filter(date__year=year) \
+                                       .values('date__month') \
+                                       .annotate(total=Sum('amount'))
+
+    for entry in income_data:
+        income_list[entry['date__month'] - 1] = float(entry['total'])
+    for entry in expense_data:
+        expense_list[entry['date__month'] - 1] = float(entry['total'])
+
+    plt.figure(figsize=(8, 4))
+    plt.plot(months_all, income_list, marker='o', color='red', label='Income')
+    plt.plot(months_all, expense_list, marker='o', color='green', label='Expense')
+    plt.xticks(months_all, ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'])
+    plt.xlabel('Month')
+    plt.ylabel('Amount')
+    plt.title('Income vs Expense by Month')
+    plt.legend()
     plt.tight_layout()
+    line_chart = get_chart()
 
-    # Save the chart to buffer
-    buffer = io.BytesIO()
-    plt.savefig(buffer, format='png')
-    buffer.seek(0)
-    graphic = base64.b64encode(buffer.getvalue()).decode()
-    buffer.close()
-
-    this_month_income = Income.objects.filter(date__year=year, date__month=month).values('source').annotate(total=Sum('amount'))
-    income_source = []
-    income_amount = []
-    for income in this_month_income:
-        income_source.append(income['source'])
-        income_amount.append(income['total'])
-
-    plt.figure(figsize=(6, 6))
-    plt.pie(income_amount,labels=income_source,autopct='%1.1f%%',startangle=90)
-    plt.title(f"Income by Sourse on {today.strftime("%B")}")
-    buffer_pie = io.BytesIO()
-    plt.savefig(buffer_pie, format='png')
-    buffer_pie.seek(0)
-    pie_chart = base64.b64encode(buffer_pie.getvalue()).decode()
-    buffer_pie.close()
-
-
-
-
-    context = {
-        'month_expense': this_month_total_expense,
-        'month_income': this_month_total_income,
-        'bar_chart': graphic,
-        'pie_chart':pie_chart,
-    }
-    return render(request, 'dashboard/dashboard.html', context)
+    # ====== Context ======
+    return render(request, 'dashboard/dashboard.html', {
+        'month_expense': month_expense,
+        'month_income': month_income,
+        'bar_chart': bar_chart,
+        'pie_chart': pie_chart,
+        'line_chart': line_chart,  # new
+    })
