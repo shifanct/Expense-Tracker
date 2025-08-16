@@ -4,60 +4,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Financial Dashboard</title>
-    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="{% static 'css/expence-tracker.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="dashboard-container">
-        <h1>Welcome to Dashboard</h1>
-        
-        <!-- Stats Section -->
-        <div class="stats-section">
-            <h2 class="section-header">Financial Overview</h2>
-            <div class="stats-container">
-                <div class="stat-card expense-card">
-                    <h5>Total Expense this Month</h5>
-                    <div class="stat-value">${{ month_expense|default:"0.00" }}</div>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="app-title">Expense Tracker</h1>
+            <div class="user-profile">
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </header>
+
+        <!-- Financial Summary Cards -->
+        <div class="summary-grid">
+            <div class="summary-card income-card">
+                <div class="card-icon">
+                    <i class="fas fa-arrow-up"></i>
                 </div>
-                
-                <div class="stat-card income-card">
-                    <h5>Total Income this Month</h5>
-                    <div class="stat-value">${{ month_income|default:"0.00" }}</div>
+                <div class="card-content">
+                    <h3>Total Income</h3>
+                    <div class="amount">${{ month_income|default:"2,500" }}</div>
+                </div>
+            </div>
+
+            <div class="summary-card expense-card">
+                <div class="card-icon">
+                    <i class="fas fa-arrow-down"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Total Expenses</h3>
+                    <div class="amount">${{ month_expense|default:"1,750" }}</div>
+                </div>
+            </div>
+
+            <div class="summary-card balance-card">
+                <div class="card-icon">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Balance</h3>
+                    <div class="amount">${{ balance|default:"750" }}</div>
+                </div>
+            </div>
+
+            <div class="summary-card budget-card">
+                <div class="card-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Remaining Budget</h3>
+                    <div class="amount">${{ remaining_budget|default:"250" }}</div>
                 </div>
             </div>
         </div>
-        
-        <!-- Action Buttons -->
-        <div class="actions-container">
-            <a href="{% url 'add_expense' %}" class="action-link add-expense">
-                Add Expenses
-            </a>
-            
-            <a href="{% url 'add_income' %}" class="action-link add-income">
-                Add Income
-            </a>
-        </div>
-        
+
         <!-- Charts Section -->
         <div class="charts-section">
-            <h2 class="section-header">Analytics</h2>
-            <div class="charts-container">
-                <div class="chart-card bar-chart-card">
-                    <div class="chart-title">Expense Analysis</div>
-                    <img src="data:image/png;base64,{{ bar_chart }}" alt="Expense Chart">
+            <div class="chart-container overview-chart">
+                <h2>Overview</h2>
+                <div class="chart-content">
+                    {% if bar_chart %}
+                        <img src="data:image/png;base64,{{ bar_chart }}" alt="Overview Chart" class="chart-image">
+                    {% else %}
+                        <div class="chart-placeholder">
+                            <canvas id="overviewChart" width="400" height="200"></canvas>
+                        </div>
+                    {% endif %}
                 </div>
-                
-                <div class="chart-card pie-chart-card">
-                    <div class="chart-title">Distribution Overview</div>
-                    <img src="data:image/png;base64,{{ pie_chart }}" alt="Pie Chart">
-                </div>
+            </div>
 
-                <div class="chart-card pie-chart-card">
-                    <div class="chart-title"></div>
-                    <img src="data:image/png;base64,{{ line_chart }}" alt="Income vs Expense">
+            <div class="chart-container pie-chart">
+                <h2>Expenses by Category</h2>
+                <div class="chart-content">
+                    {% if pie_chart %}
+                        <img src="data:image/png;base64,{{ pie_chart }}" alt="Category Chart" class="chart-image">
+                    {% else %}
+                        <div class="chart-placeholder">
+                            <canvas id="categoryChart" width="300" height="300"></canvas>
+                        </div>
+                    {% endif %}
+                    <div class="legend">
+                        <div class="legend-item">
+                            <span class="legend-color food"></span>
+                            <span>Food</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color travel"></span>
+                            <span>Travel</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color shopping"></span>
+                            <span>Shopping</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color bills"></span>
+                            <span>Bills</span>
+                        </div>
+                    </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Bottom Section -->
+        <div class="bottom-section">
+            <!-- Recent Transactions -->
+            <div class="transactions-section">
+                <h2>Recent Transactions</h2>
+                <div class="transactions-table">
+                    <div class="table-header">
+                        <span>Date</span>
+                        <span>Category</span>
+                        <span>Amount</span>
+                        <span>Note</span>
+                    </div>
+                    <div class="transaction-item">
+                        <span>20 June</span>
+                        <span>Transport</span>
+                        <span>$15</span>
+                        <span></span>
+                    </div>
+                    <div class="transaction-item">
+                        <span>18 June</span>
+                        <span>Food</span>
+                        <span>$50</span>
+                        <span></span>
+                    </div>
+                    <div class="transaction-item">
+                        <span>17 June</span>
+                        <span>Salary</span>
+                        <span>$2,000</span>
+                        <span></span>
+                    </div>
+                    <div class="transaction-item">
+                        <span>17 June</span>
+                        <span>Groceries</span>
+                        <span>$30</span>
+                        <span></span>
+                    </div>
+                    <div class="transaction-item">
+                        <span>14 June</span>
+                        <span>Entertainment</span>
+                        <span>$120</span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters Section -->
+            <div class="filters-section">
+                <h2>Filters</h2>
+                <div class="filter-group">
+                    <label>Month</label>
+                    <select class="filter-select">
+                        <option>June</option>
+                        <option>May</option>
+                        <option>April</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Category</label>
+                    <select class="filter-select">
+                        <option>Category</option>
+                        <option>Food</option>
+                        <option>Travel</option>
+                        <option>Shopping</option>
+                        <option>Bills</option>
+                    </select>
+                </div>
+                <button class="add-expense-btn">
+                    <i class="fas fa-plus"></i>
+                    Add Expense
+                </button>
             </div>
         </div>
     </div>
+
+    <!-- Sample Chart Script (fallback for when Django charts aren't available) -->
+    <script>
+        // Simple chart rendering for demo purposes
+        if (document.getElementById('overviewChart')) {
+            const ctx = document.getElementById('overviewChart').getContext('2d');
+            const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+            gradient.addColorStop(0, '#4CAF50');
+            gradient.addColorStop(1, '#81C784');
+            
+            // Draw bars for demo
+            const data = [1200, 1400, 800, 1800, 1200, 1100, 1900];
+            const maxHeight = 160;
+            const barWidth = 40;
+            const spacing = 10;
+            
+            data.forEach((value, index) => {
+                const height = (value / 2000) * maxHeight;
+                const x = index * (barWidth + spacing) + 20;
+                const y = 200 - height - 20;
+                
+                ctx.fillStyle = index % 2 === 0 ? '#4CAF50' : '#FF5722';
+                ctx.fillRect(x, y, barWidth, height);
+            });
+        }
+
+        if (document.getElementById('categoryChart')) {
+            const ctx = document.getElementById('categoryChart').getContext('2d');
+            const centerX = 150;
+            const centerY = 150;
+            const radius = 80;
+            
+            const data = [
+                { label: 'Food', value: 40, color: '#4CAF50' },
+                { label: 'Travel', value: 25, color: '#2196F3' },
+                { label: 'Shopping', value: 20, color: '#FF9800' },
+                { label: 'Bills', value: 15, color: '#9C27B0' }
+            ];
+            
+            let currentAngle = 0;
+            data.forEach(item => {
+                const sliceAngle = (item.value / 100) * 2 * Math.PI;
+                
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+                ctx.closePath();
+                ctx.fillStyle = item.color;
+                ctx.fill();
+                
+                currentAngle += sliceAngle;
+            });
+            
+            // Draw inner circle for donut effect
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 40, 0, 2 * Math.PI);
+            ctx.fillStyle = '#f5f5f5';
+            ctx.fill();
+        }
+    </script>
 </body>
 </html>
