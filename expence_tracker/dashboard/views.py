@@ -17,11 +17,24 @@ def get_chart():
     buffer.close()
     return chart
 
+month_mapping = {
+    "January": 1, "February": 2, "March": 3,
+    "April": 4, "May": 5, "June": 6,
+    "July": 7, "August": 8, "September": 9,
+    "October": 10, "November": 11, "December": 12
+}
+def convert_month_to_number(month):
+    return month_mapping.get(month)
 
 @login_required(login_url='login')
 def home(request):
-    today = date.today()
-    year, month = today.year, today.month
+    today = date.today()    
+    if request.method == 'POST':
+        year = request.POST.get('year')    
+        month = request.POST.get('month') 
+        month =  convert_month_to_number(month)
+    else:      
+        year, month = today.year, today.month
 
     # ====== Monthly Totals ======
     month_expense = DailyExpense.objects.filter(date__year=year, date__month=month).aggregate(total=Sum('amount'))['total'] or 0
@@ -84,7 +97,8 @@ def home(request):
     return render(request, 'dashboard/dashboard.html', {
         'month_expense': month_expense,
         'month_income': month_income,
+        'balance':month_income - month_expense,
         'bar_chart': bar_chart,
         'pie_chart': pie_chart,
-        'line_chart': line_chart,  # new
+        'line_chart': line_chart,  
     })

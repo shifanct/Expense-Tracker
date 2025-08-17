@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Tracker</title>
-    <link rel="stylesheet" href="{% static 'css/expence-tracker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/expence_tracker.css' %}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
@@ -26,7 +26,7 @@
                 </div>
                 <div class="card-content">
                     <h3>Total Income</h3>
-                    <div class="amount">${{ month_income|default:"2,500" }}</div>
+                    <div class="amount">${{ month_income|default:"0" }}</div>
                 </div>
             </div>
 
@@ -36,7 +36,7 @@
                 </div>
                 <div class="card-content">
                     <h3>Total Expenses</h3>
-                    <div class="amount">${{ month_expense|default:"1,750" }}</div>
+                    <div class="amount">${{ month_expense|default:"0" }}</div>
                 </div>
             </div>
 
@@ -46,25 +46,31 @@
                 </div>
                 <div class="card-content">
                     <h3>Balance</h3>
-                    <div class="amount">${{ balance|default:"750" }}</div>
-                </div>
-            </div>
-
-            <div class="summary-card budget-card">
-                <div class="card-icon">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <div class="card-content">
-                    <h3>Remaining Budget</h3>
-                    <div class="amount">${{ remaining_budget|default:"250" }}</div>
+                    <div class="amount">${{ balance|default:"0" }}</div>
                 </div>
             </div>
         </div>
 
-        <!-- Charts Section -->
+        <!-- Line Chart Section (Top) -->
+        <div class="line-chart-section">
+            <div class="chart-container line-chart">
+                <h2>Income vs Expenses Trend</h2>
+                <div class="line-chart-content">
+                    {% if line_chart %}
+                        <img src="data:image/png;base64,{{ line_chart }}" alt="Income vs Expenses Chart" class="chart-image line-chart-image">
+                    {% else %}
+                        <div class="chart-placeholder line-chart-placeholder">
+                            <canvas id="lineChart" width="800" height="300"></canvas>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section (Bar Chart and Pie Chart) -->
         <div class="charts-section">
             <div class="chart-container overview-chart">
-                <h2>Overview</h2>
+                <h2>Expense Overview</h2>
                 <div class="chart-content">
                     {% if bar_chart %}
                         <img src="data:image/png;base64,{{ bar_chart }}" alt="Overview Chart" class="chart-image">
@@ -86,24 +92,6 @@
                             <canvas id="categoryChart" width="300" height="300"></canvas>
                         </div>
                     {% endif %}
-                    <div class="legend">
-                        <div class="legend-item">
-                            <span class="legend-color food"></span>
-                            <span>Food</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-color travel"></span>
-                            <span>Travel</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-color shopping"></span>
-                            <span>Shopping</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-color bills"></span>
-                            <span>Bills</span>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -154,37 +142,148 @@
             </div>
 
             <!-- Filters Section -->
+             <form method="post" action="{% url 'dashboard' %}">
+                {% csrf_token %}
             <div class="filters-section">
-                <h2>Filters</h2>
+                <h2>Select Month</h2>
+                <div class="filter-group">
+                    <label>Year</label>
+                    <select class="filter-select" name="year">
+                        <option>2025</option>
+                        <option>2024</option>
+                        <option>2023</option>
+                        <option>2022</option>
+                    </select>
+                </div>
                 <div class="filter-group">
                     <label>Month</label>
-                    <select class="filter-select">
-                        <option>June</option>
-                        <option>May</option>
+                    <select class="filter-select" name="month">
+                        <option>January</option>
+                        <option>February</option>
+                        <option>March</option>
                         <option>April</option>
+                        <option>May</option>
+                        <option>June</option>
+                        <option>July</option>
+                        <option>August</option>
+                        <option>September</option>
+                        <option>October</option>
+                        <option>November</option>
+                        <option>December</option>
                     </select>
                 </div>
-                <div class="filter-group">
-                    <label>Category</label>
-                    <select class="filter-select">
-                        <option>Category</option>
-                        <option>Food</option>
-                        <option>Travel</option>
-                        <option>Shopping</option>
-                        <option>Bills</option>
-                    </select>
-                </div>
-                <button class="add-expense-btn">
-                    <i class="fas fa-plus"></i>
-                    Add Expense
-                </button>
+                <button class="add-expense-btn"> Confirm </button>
             </div>
+            </form>
         </div>
     </div>
 
     <!-- Sample Chart Script (fallback for when Django charts aren't available) -->
     <script>
-        // Simple chart rendering for demo purposes
+        // Line Chart rendering
+        if (document.getElementById('lineChart')) {
+            const ctx = document.getElementById('lineChart').getContext('2d');
+            const width = ctx.canvas.width;
+            const height = ctx.canvas.height;
+            const padding = 40;
+            
+            // Sample data for income and expenses over months
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+            const incomeData = [2000, 2200, 1800, 2400, 2100, 2500];
+            const expenseData = [1500, 1800, 1200, 2000, 1600, 1750];
+            
+            const maxValue = Math.max(...incomeData, ...expenseData);
+            const chartWidth = width - 2 * padding;
+            const chartHeight = height - 2 * padding;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw grid lines
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 5; i++) {
+                const y = padding + (i * chartHeight / 5);
+                ctx.beginPath();
+                ctx.moveTo(padding, y);
+                ctx.lineTo(width - padding, y);
+                ctx.stroke();
+            }
+            
+            // Draw month labels
+            ctx.fillStyle = '#7f8c8d';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            months.forEach((month, index) => {
+                const x = padding + (index * chartWidth / (months.length - 1));
+                ctx.fillText(month, x, height - 10);
+            });
+            
+            // Draw income line
+            ctx.strokeStyle = '#4CAF50';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            incomeData.forEach((value, index) => {
+                const x = padding + (index * chartWidth / (incomeData.length - 1));
+                const y = height - padding - (value / maxValue) * chartHeight;
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            ctx.stroke();
+            
+            // Draw expense line
+            ctx.strokeStyle = '#FF5722';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            expenseData.forEach((value, index) => {
+                const x = padding + (index * chartWidth / (expenseData.length - 1));
+                const y = height - padding - (value / maxValue) * chartHeight;
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            ctx.stroke();
+            
+            // Draw income points
+            incomeData.forEach((value, index) => {
+                const x = padding + (index * chartWidth / (incomeData.length - 1));
+                const y = height - padding - (value / maxValue) * chartHeight;
+                ctx.fillStyle = '#4CAF50';
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, 2 * Math.PI);
+                ctx.fill();
+            });
+            
+            // Draw expense points
+            expenseData.forEach((value, index) => {
+                const x = padding + (index * chartWidth / (expenseData.length - 1));
+                const y = height - padding - (value / maxValue) * chartHeight;
+                ctx.fillStyle = '#FF5722';
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, 2 * Math.PI);
+                ctx.fill();
+            });
+            
+            // Draw legend
+            ctx.fillStyle = '#4CAF50';
+            ctx.fillRect(padding, 20, 15, 15);
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = '14px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText('Income', padding + 20, 32);
+            
+            ctx.fillStyle = '#FF5722';
+            ctx.fillRect(padding + 100, 20, 15, 15);
+            ctx.fillStyle = '#2c3e50';
+            ctx.fillText('Expenses', padding + 120, 32);
+        }
+
+        // Bar Chart rendering for demo purposes
         if (document.getElementById('overviewChart')) {
             const ctx = document.getElementById('overviewChart').getContext('2d');
             const gradient = ctx.createLinearGradient(0, 0, 0, 200);
