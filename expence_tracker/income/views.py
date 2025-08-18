@@ -10,7 +10,7 @@ def add_income(request):
             income = form.save(commit=False)  
             income.user = request.user        
             income.save()                     
-            return redirect('home')
+            return redirect('dashboard')
     else:
         form = IncomeForm()
 

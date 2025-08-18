@@ -12,7 +12,7 @@ def add_expense(request):
             frm = form.save(commit=False)
             frm.user = request.user
             frm.save()
-            return redirect('home')
+            return redirect('dashboard')
         else:
             print(form.errors)
     else:    

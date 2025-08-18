@@ -95,7 +95,10 @@ def home(request):
     plt.tight_layout()
     line_chart = get_chart()
 
-    check_budget_setted = Monthly_budget.objects.get(month = this_month)
+    check_budget_setted = Monthly_budget.objects.get(month = this_month, user = request.user)
+    if check_budget_setted:
+        percentage = round((month_expense / check_budget_setted.budget  ) * 100, 2)
+        print(percentage)
 
     # ====== Context ======
     return render(request, 'dashboard/dashboard.html', {
@@ -106,4 +109,5 @@ def home(request):
         'pie_chart': pie_chart,
         'line_chart': line_chart,  
         'if_budget':check_budget_setted,
+        'percentage':percentage
     })

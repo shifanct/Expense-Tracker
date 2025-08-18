@@ -78,11 +78,11 @@
                     <h3>Budget Usage</h3>
                     <div class="progress-container">
                         <div class="progress-bar">
-                            <div class="progress-fill" data-percentage="70"></div>
+                            <div class="progress-fill" style='width: {{ percentage }}%;'></div>
                         </div>
                         <div class="progress-info">
-                            <span class="progress-percentage">70%</span>
-                            <span class="progress-amount">${{ month_expense|default:"1400" }} / ${{ budget|default:"2000" }}</span>
+                            <span class="progress-percentage">{{ percentage }}%</span>
+                            <span class="progress-amount">${{ month_expense|default:"0" }} / ${{ if_budget.budget|default:"0" }}</span>
                         </div>
                     </div>
                 </div>
@@ -377,6 +377,8 @@
             ctx.fillStyle = '#f5f5f5';
             ctx.fill();
         }
+        
     </script>
+
 </body>
 </html>
