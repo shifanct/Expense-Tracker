@@ -419,6 +419,101 @@ body {
     font-size: 0.9rem;
 }
 
+/* Budget Section */
+.budget-section {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+}
+
+.budget-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.budget-setting h3,
+.budget-usage h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #34495e;
+}
+
+.budget-input-group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.budget-input {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 0.95rem;
+    color: #2c3e50;
+    transition: border-color 0.3s ease;
+}
+
+.budget-input:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.set-budget-btn {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.set-budget-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.progress-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 18px;
+    background-color: #ecf0f1;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 70%; /* fallback */
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    border-radius: 10px 0 0 10px;
+    transition: width 0.5s ease;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+.progress-percentage {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {
@@ -471,6 +566,10 @@ body {
     .filters-section {
         padding: 20px;
     }
+
+    .budget-container {
+        gap: 20px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -507,6 +606,15 @@ body {
     .transaction-item span:nth-child(4) {
         display: none;
     }
+
+    .budget-input-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .set-budget-btn {
+        width: 100%;
+    }
 }
 
 /* Animations */
@@ -524,7 +632,8 @@ body {
 .summary-card,
 .chart-container,
 .transactions-section,
-.filters-section {
+.filters-section,
+.budget-section {
     animation: slideInUp 0.6s ease-out;
 }
 

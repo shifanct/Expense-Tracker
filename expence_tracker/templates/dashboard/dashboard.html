@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Tracker</title>
-    <link rel="stylesheet" href="{% static 'css/expence_tracker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
@@ -47,6 +47,44 @@
                 <div class="card-content">
                     <h3>Balance</h3>
                     <div class="amount">${{ balance|default:"0" }}</div>
+                </div>
+            </div>
+        </div>
+        <!-- Budget Section -->
+        <div class="budget-section">
+            <div class="budget-container">
+                <div class="budget-setting">
+                    <h3>Set Budget for This Month</h3>
+                    {% if if_budget %}
+                    <form method="post" action="{% url 'update_budget' %}">
+                        {% csrf_token %}
+                        <div class="budget-input-group">
+                            <input type="number" class="budget-input" name="budget" placeholder="{{ if_budget.budget }}">
+                            <button class="set-budget-btn">Update Budget</button>
+                        </div>
+                    </form>
+                    {% else %}
+                    <form method="post" action="{% url 'set_budget' %}">
+                        {% csrf_token %}
+                        <div class="budget-input-group">
+                            <input type="number" class="budget-input" name="budget">
+                            <button class="set-budget-btn">Set Budget</button>
+                        </div>
+                    </form>
+                    {% endif %}
+                </div>
+                
+                <div class="budget-usage">
+                    <h3>Budget Usage</h3>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" data-percentage="70"></div>
+                        </div>
+                        <div class="progress-info">
+                            <span class="progress-percentage">70%</span>
+                            <span class="progress-amount">${{ month_expense|default:"1400" }} / ${{ budget|default:"2000" }}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

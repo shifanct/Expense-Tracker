@@ -6,6 +6,7 @@ from datetime import date
 from django.db.models import Sum
 import io, base64
 import matplotlib.pyplot as plt
+from budget.models import Monthly_budget
 
 
 def get_chart():
@@ -28,7 +29,8 @@ def convert_month_to_number(month):
 
 @login_required(login_url='login')
 def home(request):
-    today = date.today()    
+    today = date.today() 
+    this_month = today.month   
     if request.method == 'POST':
         year = request.POST.get('year')    
         month = request.POST.get('month') 
@@ -93,6 +95,8 @@ def home(request):
     plt.tight_layout()
     line_chart = get_chart()
 
+    check_budget_setted = Monthly_budget.objects.get(month = this_month)
+
     # ====== Context ======
     return render(request, 'dashboard/dashboard.html', {
         'month_expense': month_expense,
@@ -101,4 +105,5 @@ def home(request):
         'bar_chart': bar_chart,
         'pie_chart': pie_chart,
         'line_chart': line_chart,  
+        'if_budget':check_budget_setted,
     })
