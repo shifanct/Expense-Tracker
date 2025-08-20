@@ -105,8 +105,8 @@
         <div class="budget-section">
             <div class="budget-container">
                 <div class="budget-setting">
-                    <h3>Set Budget for This Month</h3>
                     {% if if_budget %}
+                    <h3>Budget</h3>
                     <form method="post" action="{% url 'update_budget' %}">
                         {% csrf_token %}
                         <div class="budget-input-group">
@@ -115,10 +115,11 @@
                         </div>
                     </form>
                     {% else %}
+                    <h3>Set Budget for this month</h3>
                     <form method="post" action="{% url 'set_budget' %}">
                         {% csrf_token %}
                         <div class="budget-input-group">
-                            <input type="number" class="budget-input" name="budget">
+                            <input type="number" class="budget-input" name="budget" placeholder="Set Budget for this month..">
                             <button class="set-budget-btn">Set Budget</button>
                         </div>
                     </form>
@@ -126,6 +127,7 @@
                 </div>
                 
                 <div class="budget-usage">
+                    {% if if_budget %}
                     <h3>Budget Usage</h3>
                     <div class="progress-container">
                         <div class="progress-bar">
@@ -136,6 +138,7 @@
                             <span class="progress-amount">${{ month_expense|default:"0" }} / ${{ if_budget.budget|default:"0" }}</span>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

@@ -43,7 +43,7 @@ def home(request):
     month_income = Income.objects.filter(date__year=year, date__month=month).aggregate(total=Sum('amount'))['total'] or 0
 
     # ====== Bar Chart: Expense by Category ======
-    expenses = DailyExpense.objects.filter(date__year=year, date__month=month) \
+    expenses = DailyExpense.objects.filter(date__year=year, date__month=month, user = request.user) \
                                    .values('expense_type') \
                                    .annotate(total=Sum('amount'))
 
@@ -56,7 +56,7 @@ def home(request):
     bar_chart = get_chart()
 
     # ====== Pie Chart: Income by Source ======
-    incomes = Income.objects.filter(date__year=year, date__month=month) \
+    incomes = Income.objects.filter(date__year=year, date__month=month, user = request.user) \
                              .values('source') \
                              .annotate(total=Sum('amount'))
 
@@ -71,11 +71,11 @@ def home(request):
     income_list = [0] * 12
     expense_list = [0] * 12
 
-    income_data = Income.objects.filter(date__year=year) \
+    income_data = Income.objects.filter(date__year=year, user =  request.user) \
                                 .values('date__month') \
                                 .annotate(total=Sum('amount'))
 
-    expense_data = DailyExpense.objects.filter(date__year=year) \
+    expense_data = DailyExpense.objects.filter(date__year=year, user =  request.user) \
                                        .values('date__month') \
                                        .annotate(total=Sum('amount'))
 
@@ -85,8 +85,8 @@ def home(request):
         expense_list[entry['date__month'] - 1] = float(entry['total'])
 
     plt.figure(figsize=(8, 4))
-    plt.plot(months_all, income_list, marker='o', color='red', label='Income')
-    plt.plot(months_all, expense_list, marker='o', color='green', label='Expense')
+    plt.plot(months_all, income_list, marker='o', color='green', label='Income')
+    plt.plot(months_all, expense_list, marker='o', color='red', label='Expense')
     plt.xticks(months_all, ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'])
     plt.xlabel('Month')
     plt.ylabel('Amount')
@@ -95,10 +95,12 @@ def home(request):
     plt.tight_layout()
     line_chart = get_chart()
 
-    check_budget_setted = Monthly_budget.objects.get(month = this_month, user = request.user)
-    if check_budget_setted:
+    try:
+        check_budget_setted = Monthly_budget.objects.get(month = this_month, user = request.user)
         percentage = round((month_expense / check_budget_setted.budget  ) * 100, 2)
-        print(percentage)
+    except:
+        check_budget_setted = None
+        percentage = None
 
     # ====== Context ======
     return render(request, 'dashboard/dashboard.html', {
