@@ -108,8 +108,6 @@ def home(request):
     recent_income = Income.objects.order_by('-date').filter(user = request.user)[:5]
     combined = list(chain(recent_expense, recent_income))
     recent_transactions = sorted(combined, key=lambda x: x.date, reverse=True)[:5]
-    for obj in recent_transactions:
-        print(obj._meta.model_name)
     # ====== Context ======
     return render(request, 'dashboard/dashboard.html', {
         'month_expense': month_expense,
