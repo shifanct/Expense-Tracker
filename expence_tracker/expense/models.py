@@ -17,6 +17,8 @@ class DailyExpense(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField(null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_expense', null=True, blank=True)
+    def model_name(self):
+        return self._meta.model_name
 
     def __str__(self):
         return f'{self.expense_type} on {self.date}'

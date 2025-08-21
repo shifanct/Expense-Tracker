@@ -200,36 +200,22 @@
                         <span>Amount</span>
                         <span>Note</span>
                     </div>
+                    {% for transaction in recent_transactions %}
                     <div class="transaction-item">
-                        <span>20 June</span>
-                        <span>Transport</span>
-                        <span>$15</span>
-                        <span></span>
+                        <span>{{ transaction.date }}</span>
+                        {% if transaction.source %}
+                        <span>{{ transaction.source }}</span>
+                        {% else %}
+                        <span>{{ transaction.expense_type }}</span>
+                        {% endif %}
+                        <span>{{ transaction.amount }}</span>
+                        {% if transaction.model_name == "income" %}
+                        <span style="color:#219150;">income</span>
+                        {% elif transaction.model_name == "dailyexpense" %}
+                        <span style="color: red;">Expense</span>
+                        {% endif %}
                     </div>
-                    <div class="transaction-item">
-                        <span>18 June</span>
-                        <span>Food</span>
-                        <span>$50</span>
-                        <span></span>
-                    </div>
-                    <div class="transaction-item">
-                        <span>17 June</span>
-                        <span>Salary</span>
-                        <span>$2,000</span>
-                        <span></span>
-                    </div>
-                    <div class="transaction-item">
-                        <span>17 June</span>
-                        <span>Groceries</span>
-                        <span>$30</span>
-                        <span></span>
-                    </div>
-                    <div class="transaction-item">
-                        <span>14 June</span>
-                        <span>Entertainment</span>
-                        <span>$120</span>
-                        <span></span>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
 

@@ -17,6 +17,9 @@ class Income(models.Model):
     source = models.CharField(max_length=50, choices=SOURCE_CHOICES)
     description = models.TextField(blank=True, null=True)
 
+    def model_name(self):
+        return self._meta.model_name
+
     def __str__(self):
         return f'{self.source} on {self.date}'
 

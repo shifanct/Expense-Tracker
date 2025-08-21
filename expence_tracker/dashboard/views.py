@@ -7,6 +7,7 @@ from django.db.models import Sum
 import io, base64
 import matplotlib.pyplot as plt
 from budget.models import Monthly_budget
+from itertools import chain
 
 
 def get_chart():
@@ -100,8 +101,15 @@ def home(request):
         percentage = round((month_expense / check_budget_setted.budget  ) * 100, 2)
     except:
         check_budget_setted = None
-        percentage = None
+        percentage = None  
 
+
+    recent_expense = DailyExpense.objects.order_by('-date').filter(user = request.user)[:5]
+    recent_income = Income.objects.order_by('-date').filter(user = request.user)[:5]
+    combined = list(chain(recent_expense, recent_income))
+    recent_transactions = sorted(combined, key=lambda x: x.date, reverse=True)[:5]
+    for obj in recent_transactions:
+        print(obj._meta.model_name)
     # ====== Context ======
     return render(request, 'dashboard/dashboard.html', {
         'month_expense': month_expense,
@@ -111,5 +119,6 @@ def home(request):
         'pie_chart': pie_chart,
         'line_chart': line_chart,  
         'if_budget':check_budget_setted,
-        'percentage':percentage
+        'percentage':percentage,
+        'recent_transactions':recent_transactions,
     })
