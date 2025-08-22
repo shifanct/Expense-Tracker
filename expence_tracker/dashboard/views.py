@@ -40,8 +40,8 @@ def home(request):
         year, month = today.year, today.month
 
     # ====== Monthly Totals ======
-    month_expense = DailyExpense.objects.filter(date__year=year, date__month=month).aggregate(total=Sum('amount'))['total'] or 0
-    month_income = Income.objects.filter(date__year=year, date__month=month).aggregate(total=Sum('amount'))['total'] or 0
+    month_expense = DailyExpense.objects.filter(date__year=year, date__month=month, user = request.user).aggregate(total=Sum('amount'))['total'] or 0
+    month_income = Income.objects.filter(date__year=year, date__month=month, user = request.user).aggregate(total=Sum('amount'))['total'] or 0
 
     # ====== Bar Chart: Expense by Category ======
     expenses = DailyExpense.objects.filter(date__year=year, date__month=month, user = request.user) \

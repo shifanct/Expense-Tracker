@@ -20,24 +20,40 @@
 
         <!-- Financial Summary Cards -->
         <div class="summary-grid">
-            <div class="summary-card income-card">
-                <div class="card-icon">
-                    <i class="fas fa-arrow-up"></i>
+            <!-- Income Card -->
+                <div class="summary-card income-card">
+                    <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Total Income</h3>
+                        <div class="amount">${{ month_income|default:"0" }}</div>
+                    </div>
                 </div>
-                <div class="card-content">
-                    <h3>Total Income</h3>
-                    <div class="amount">${{ month_income|default:"0" }}</div>
-                </div>
+                <form action="{% url 'add_income' %}">
+                <button class="add-btn add-income-btn">
+                        <i class="fas fa-plus"></i> Add Income
+                </button>
+                </form>
             </div>
-
+            
+            <!-- Expense Card -->
             <div class="summary-card expense-card">
-                <div class="card-icon">
-                    <i class="fas fa-arrow-down"></i>
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Total Expenses</h3>
+                        <div class="amount">${{ month_expense|default:"0" }}</div>
+                    </div>
                 </div>
-                <div class="card-content">
-                    <h3>Total Expenses</h3>
-                    <div class="amount">${{ month_expense|default:"0" }}</div>
-                </div>
+                <form action="{% url 'add_expense' %}">
+                <button class="add-btn add-expense-btn">
+                    <i class="fas fa-plus"></i> Add Expense
+                </button>
+                </form>
             </div>
 
             <div class="summary-card balance-card">
